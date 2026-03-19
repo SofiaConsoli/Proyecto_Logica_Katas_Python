@@ -118,4 +118,79 @@ def recuento_palabras(texto, n):
     return list(filter(lambda x: len(x)>n, texto.split()))
 recuento_palabras("Me llamo Sofía , vivo en Madrid",3)
 
-#17. Crea una función que tome una lista de dígitos y devuelva el número correspondiente. Por ejemplo, [5,7,2] corresponde al número quinientos setenta y dos (572). Usa la función reduce()
+# 17. Crea una función que tome una lista de dígitos y devuelva el número correspondiente. Por ejemplo, [5,7,2] corresponde al número quinientos setenta y dos (572). Usa la función reduce()
+from functools import reduce
+def lista_numero(lista):
+    return reduce(lambda x,y: x*10 + y, lista)
+lista_numero([5,7,2])
+#también se puede resolver con un bucle for de la siguiente forma:
+def lista_numero(lista):
+    resultado = 0
+
+    for digito in lista:
+        resultado = resultado * 10 + digito
+
+    return resultado
+print(lista_numero([5,7,2]))
+
+# 18. Escribe un programa en Python que cree una lista de diccionarios que contenga información de estudiantes (nombre, edad, calificación) y use la función filter para extraer a los estudiantes con una calificación mayor o igual a 90. Usa la función filter().
+estudiantes = [
+    {"nombre":"Sofia","edad":27,"calificacion":86},
+    {"nombre":"Romina","edad":23,"calificacion":95},
+    {"nombre":"Sonia","edad":34,"calificacion":73},
+    {"nombre":"Gustavo","edad":29,"calificacion":100},
+]
+
+aprobados = list(
+    map(
+        lambda x: {"nombre": x["nombre"], "calificacion": x["calificacion"]},
+        filter(lambda x: x["calificacion"] >= 90, estudiantes)
+    )
+)
+print(f"Los aprobados son: {aprobados}")
+
+# 19. Crea una función lambda que filtre los números impares de una lista dada.
+lista = [13, 17, 654, 32, 1, 6, 7, 34, 23]
+filtrar_impares = list(filter(lambda x: x%2!=0, lista))
+filtrar_impares
+
+# 20. Para una lista con elementos tipo integer y string obtén una nueva lista sólo con los valores int. Usa la función filter()
+lista = [13,"Sofía",3,"hola", "Romina" , 6 , 9]
+filtrar_numeros = list(filter(lambda x: isinstance(x,int), lista))
+filtrar_numeros
+
+# 21. Crea una función que calcule el cubo de un número dado mediante una función lambda
+cubo = lambda x: x**3
+cubo(20
+     
+# 22. Dada una lista numérica, obtén el producto total de los valores de dicha lista.Usa la función reduce()
+from functools import reduce
+lista=[2,5,7]
+producto = reduce(lambda x,y: x*y, lista)
+producto
+
+# 23. Concatena una lista de palabras.Usa la función reduce()
+from functools import reduce
+palabras=["hola", "," , "soy","Sofía"]
+texto = reduce(lambda x,y: x+" "+y, palabras)
+texto
+
+# 24. Calcula la diferencia total en los valores de una lista. Usa la función reduce().
+from functools import reduce
+lista=[13,3,2 , 10]
+resultado = reduce(lambda x,y: x-y, nums)
+resultado
+
+# 25. Crea una función que cuente el número de caracteres en una cadena de texto dada.
+def contar_caracteres(texto):
+    return len(texto)
+contar_caracteres("Hola, soy Sofía")
+
+# 26. Crea una función lambda que calcule el resto de la división entre dos números dados.
+resto = lambda a,b: a%b
+resto(346,23)
+
+# 27. Crea una función que calcule el promedio de una lista de números.
+def promedio_lista(lista):
+    return sum(lista)/len(lista)
+promedio_lista([643,240,16])
