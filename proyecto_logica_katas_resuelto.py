@@ -31,7 +31,7 @@ print(f"La diferencia entre listas es: {diferencia_listas}")
 def evaluar_notas_media(lista, nota_aprobado=5):
     media = sum(lista)/len(lista)
     estado = "aprobado" if media >= nota_aprobado else "suspenso"
-    return (f"Como la nota media es {media}", f"el estado es {estado}")
+    return (media, estado)
 
 evaluar_notas_media([2.5 , 8.4 , 4.7 , 9.1 , 3.9])
 
@@ -79,7 +79,11 @@ def promedio(lista):
         raise Lista_Vacia("La lista está vacía")
     return sum(lista)/len(lista)
 
-promedio([5 , 2 , 25 , 7 , 10 , 1 , 19])
+try:
+    resultado = promedio([5 , 2 , 25 , 7 , 10 , 1 , 19])
+    print(resultado)
+except Lista_Vacia as e:
+    print(e)
 
 # 11. Escribe un programa que pida al usuario que introduzca su edad. Si el usuario ingresa un valor no numérico o un valor fuera del rango esperado (por ejemplo, menor que 0 o mayor que 120, maneja las excepciones adecuadamente.
 def pedir_edad():
@@ -179,7 +183,7 @@ texto
 # 24. Calcula la diferencia total en los valores de una lista. Usa la función reduce().
 from functools import reduce
 lista=[13,3,2 , 10]
-resultado = reduce(lambda x,y: x-y, nums)
+resultado = reduce(lambda x, y: x - y, lista)
 resultado
 
 # 25. Crea una función que cuente el número de caracteres en una cadena de texto dada.
@@ -212,8 +216,8 @@ def enmascarar(valor):
 enmascarar("ES615234095624527990987")
 
 # 30. Crea una función que determine si dos palabras son anagramas, es decir, si están formadas por las mismas letras pero en diferente orden.
-def anagramas(a,b):
-    return sorted(a)==sorted(b)
+def anagramas(a, b):
+    return sorted(a.lower().replace(" ", "")) == sorted(b.lower().replace(" ", ""))
 anagramas("sofia","aifos")
 
 # 31. Crea una función que solicite al usuario ingresar una lista de nombres y luego solicite un nombre para buscar en esa lista. Si el nombre está en la lista, se imprime un mensaje indicando que fue encontrado, de lo contrario, se lanza una excepción.
@@ -291,11 +295,13 @@ class Arbol:
         self.ramas.append(1)
 
     def crecer_ramas(self):
-        self.ramas = [rama+1 for rama in self.ramas]
+        self.ramas = [rama + 1 for rama in self.ramas]
 
-    def quitar_rama(self,pos):
-        if pos < len(self.ramas):
+    def quitar_rama(self, pos):
+        if 0 <= pos < len(self.ramas):
             self.ramas.pop(pos)
+        else:
+            print("Posición no válida")
 
     def info_arbol(self):
         return {
@@ -304,14 +310,16 @@ class Arbol:
             "longitudes": self.ramas
         }
 
-arbol=Arbol()
+
+arbol = Arbol()
 arbol.crecer_tronco()
 arbol.nueva_rama()
 arbol.crecer_ramas()
 arbol.nueva_rama()
 arbol.nueva_rama()
 arbol.quitar_rama(2)
-arbol.info_arbol()
+
+print(arbol.info_arbol())
 
 # 36. Crea la clase UsuarioBanco ,representa a un usuario de un banco con su nombre, saldo y si tiene o no cuenta corriente. Proporciona métodos para realizar operaciones como retirar dinero, transferir dinero desde otro usuario y agregar dinero al saldo.
 """
@@ -331,33 +339,33 @@ Caso de uso:
 
 class UsuarioBanco:
 
-    def __init__(self,nombre,saldo,cuenta_corriente):
-        self.nombre=nombre
-        self.saldo=saldo
-        self.cuenta_corriente=cuenta_corriente
+    def __init__(self, nombre, saldo, cuenta_corriente):
+        self.nombre = nombre
+        self.saldo = saldo
+        self.cuenta_corriente = cuenta_corriente
 
-    def retirar_dinero(self,cantidad):
-        if cantidad>self.saldo:
+    def retirar_dinero(self, cantidad):
+        if cantidad > self.saldo:
             raise ValueError("Saldo insuficiente")
-        self.saldo-=cantidad
+        self.saldo -= cantidad
 
     def transferir_dinero(self, otro, cantidad):
-        try:
-            self.retirar_dinero(cantidad)
-            otro.agregar_dinero(cantidad)
-        except ValueError:
-            print("Saldo insuficiente") 
+        self.retirar_dinero(cantidad)
+        otro.agregar_dinero(cantidad)
 
-    def agregar_dinero(self,cantidad):
-        self.saldo+=cantidad
+    def agregar_dinero(self, cantidad):
+        self.saldo += cantidad
 
 
-alicia=UsuarioBanco("alicia",100,True)
-bob=UsuarioBanco("bob",50,True)
+alicia = UsuarioBanco("Alicia", 100, True)
+bob = UsuarioBanco("Bob", 50, True)
 
-bob.agregar_dinero(20)
-bob.transferir_dinero(alicia,80)
-alicia.retirar_dinero(50)
+try:
+    bob.agregar_dinero(20)
+    bob.transferir_dinero(alicia, 80)
+    alicia.retirar_dinero(50)
+except ValueError as e:
+    print(e)
 
 print(f"El saldo de Alicia es: {alicia.saldo} y el saldo de Bob es: {bob.saldo}")
 
@@ -377,34 +385,48 @@ Comprueba el funcionamiento completo de la función procesar_texto
 """
 
 def contar_palabras(texto):
-    palabras=texto.split()
-    freq={}
+    palabras = texto.split()
+    freq = {}
     for p in palabras:
-        freq[p]=freq.get(p,0)+1
+        freq[p] = freq.get(p, 0) + 1
     return freq
 
-def reemplazar_palabras(texto,original,nueva):
-    return texto.replace(original,nueva)
 
-def eliminar_palabra(texto,palabra):
-    return " ".join([p for p in texto.split() if p!=palabra])
+def reemplazar_palabras(texto, original, nueva):
+    return texto.replace(original, nueva)
 
-def procesar_texto(texto,opcion,*args):
 
-    if opcion=="contar":
+def eliminar_palabra(texto, palabra):
+    return " ".join([p for p in texto.split() if p != palabra])
+
+
+def procesar_texto(texto, opcion, *args):
+
+    if opcion == "contar":
         return contar_palabras(texto)
 
-    elif opcion=="reemplazar":
-        return reemplazar_palabras(texto,args[0],args[1])
+    elif opcion == "reemplazar":
+        if len(args) < 2:
+            raise ValueError("Faltan argumentos para reemplazar")
+        return reemplazar_palabras(texto, args[0], args[1])
 
-    elif opcion=="eliminar":
-        return eliminar_palabra(texto,args[0])
-    
+    elif opcion == "eliminar":
+        if len(args) < 1:
+            raise ValueError("Faltan argumentos para eliminar")
+        return eliminar_palabra(texto, args[0])
+
+    else:
+        return "Opción no válida"
+
+
 texto = "Hola, me llamo Sofía y vivo en Madrid , mi hermana es Romina y vive en Madrid"
-    
-print(procesar_texto(texto, "contar"))
-print(procesar_texto(texto, "reemplazar","Sofía","Romina"))
-print(procesar_texto(texto, "eliminar","Hola,"))
+
+try:
+    print(procesar_texto(texto, "contar"))
+    print(procesar_texto(texto, "reemplazar", "Sofía", "Romina"))
+    print(procesar_texto(texto, "eliminar", "Hola,"))
+except ValueError as e:
+    print(e)
 
 # 38. Genera un programa que nos diga si es de noche, de día o tarde según la hora proporcionada por el usuario.
 def momento_dia(hora):
@@ -474,14 +496,16 @@ programa de Python.
 """
 
 def compra():
-    precio=float(input("Indique el precio del producto: "))
-    cupon=input("¿Tiene cupón? (si/no): ")
+    precio = float(input("Indique el precio del producto: "))
+    cupon = input("¿Tiene cupón? (si/no): ").lower()
 
-    if cupon=="si":
-        descuento=float(input("Indique el valor en euros del cupón: "))
-        if descuento>0:
-            precio-=descuento
-    print("Precio final:",precio)
-    
+    if cupon == "si":
+        descuento = float(input("Indique el valor en euros del cupón: "))
+        if descuento > 0:
+            precio -= descuento
+            if precio < 0:
+                precio = 0
+
+    print("Precio final:", precio)
 compra()
 
